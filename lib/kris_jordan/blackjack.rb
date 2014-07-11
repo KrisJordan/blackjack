@@ -1,6 +1,7 @@
 require 'kris_jordan'
 
 require 'kris_jordan/blackjack/card'
+require 'kris_jordan/blackjack/hand'
 
 module KrisJordan
   module Blackjack
