@@ -1,6 +1,8 @@
 module KrisJordan::Blackjack
   class Card
 
+    attr_reader :rank, :suit
+
     SUITS   = [ :heart, :diamond, :spade, :club ]
 
     RANKS   = [ :ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, :jack, :queen, :king ]
@@ -11,6 +13,10 @@ module KrisJordan::Blackjack
       raise "Invalid suit: #{suit}" unless SUITS.include? suit
       @suit = suit
       freeze
+    end
+
+    def ==(other_card)
+      @rank == other_card.rank and @suit == other_card.suit
     end
 
     def value
