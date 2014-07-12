@@ -1,5 +1,6 @@
 module KrisJordan::Blackjack
   class Hand
+    include Comparable 
 
     def initialize(cards = Array.new)
       @cards = cards
@@ -27,6 +28,10 @@ module KrisJordan::Blackjack
       else
         0
       end
+    end
+
+    def <=>(deck)
+      value <=> deck.value
     end
 
     def blackjack?

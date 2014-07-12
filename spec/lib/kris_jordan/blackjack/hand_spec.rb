@@ -98,6 +98,24 @@ describe Hand do
     end
   end
 
+  describe "#<=>" do
+    it "should return -1 for lesser hands" do
+      expect( @a_pair_of_2s <=> @a_2_and_a_3 ).to eq -1
+    end
+
+    it "should return 0 for equivalent hands" do
+      expect( @a_pair_of_10s <=> @a_king_and_a_10 ).to eq 0
+    end
+
+    it "should return 1 for greater hands" do
+      expect( @blackjack <=> @a_pair_of_10s ).to eq 1
+    end
+
+    it "should return -1 for busts" do
+      expect( @bust <=> @a_pair_of_2s ).to eq -1
+    end
+  end
+
   describe "#bust?" do
     it "should be false without any cards" do
       expect(@an_empty_hand.bust?).to eq false
