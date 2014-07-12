@@ -1,12 +1,17 @@
 module KrisJordan::Blackjack
   class Hand
 
-    def initialize(*cards)
+    def initialize(cards = Array.new)
       @cards = cards
+      freeze
     end
 
     def length
       @cards.length
+    end
+
+    def take(card)
+      Hand.new @cards.dup + [card]
     end
 
     def possible_values
@@ -25,11 +30,22 @@ module KrisJordan::Blackjack
     end
 
     def blackjack?
-      @cards.length == 2 and value == 21
+      length == 2 and value == 21
     end
 
-    def split?
-      @cards.length == 2 and @cards[0].value == @cards[1].value
+    def can_hit?
+      length >= 2 and value < 21
+    end
+
+    def can_split?
+      length == 2 and @cards[0].value == @cards[1].value
+    end
+
+    def can_double_down?
+    end
+
+    def bust?
+      length > 0 and value == 0
     end
 
     private
