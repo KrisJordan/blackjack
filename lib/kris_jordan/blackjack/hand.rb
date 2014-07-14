@@ -11,7 +11,7 @@ module KrisJordan::Blackjack
       @cards.length
     end
 
-    def take(card)
+    def dealt(card)
       Hand.new @cards.dup + [card]
     end
 
@@ -51,6 +51,10 @@ module KrisJordan::Blackjack
 
     def bust?
       length > 0 and value == 0
+    end
+
+    def to_s
+      @cards.map{ |c| c.to_s }.join() + ":" + value.to_s
     end
 
     private
