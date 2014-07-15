@@ -55,7 +55,7 @@ module KrisJordan::Blackjack
 
     attr_reader :players, :hands
 
-    STATES = [:betting, :dealing, :dealing, :playing, :collecting]
+    STATES = [:betting, :dealing, :dealing, :playing, :collecting, :over]
 
     def initialize(players=Array.new)
       @deck    = Deck.new + Deck.new
@@ -65,80 +65,76 @@ module KrisJordan::Blackjack
     end
 
     def next
+      player  = @turn.player
+      hand    = @turn.hand
       case @turn.state
       when :betting
-        next_bet
+        next_bet player, hand
       when :dealing
-        next_deal
+        next_deal player, hand
       when :playing
-        next_play
+        next_play player, hand
       when :collecting
+        next_collect player, hand
       else
         return false
       end
-      true
     end
 
-    def next_bet
+    def next_bet player, hand
       # For now, jump straight to dealing
       # Round.new @players, @deck, :dealing
-      puts 'bet'
-      emit_bet 0
+      { command: :bet, amount: 0 }
     end
 
-    def next_deal
-      puts 'deal'
-      emit_deal @deck.random_card
+    def next_deal player, hand
+      { command: :deal, card: @deck.random_card }
     end
     
-    def next_play
-      puts 'play'
-      player = @turn.player
-      hand   = @turn.hand
+    def next_play player, hand
       puts hand
       unless hand.bust?
         case player.play hand
         when :hit
-          emit_hit @deck.random_card
+          { command: :hit, card: @deck.random_card }
         when :stand
-          emit_stand
+          { command: :stand }
         end
       else
-        emit_stand
+        { command: :stand }
       end
     end
 
-    def emit_bet amount
+    def next_collect player, hand
+      { command: :collect, amount: 0 }
+    end
+
+    def bet amount
+      puts 'bet'
       @turn.next
     end
 
-    def emit_deal card
+    def deal card
+      puts 'deal'
       @deck = @deck.take card
       @turn.set_hand @turn.hand.dealt card
       @turn.next
     end
 
-    def emit_hit card
+    def hit card
+      puts 'play'
       @deck = @deck.take card
       @turn.set_hand @turn.hand.dealt card
     end
 
-    def emit_stand
+    def stand
+      puts 'play'
       @turn.next
     end
 
-
-
-    def deal
-      2.times do |card|
-        @players = @players.map do |player|
-          new_player = player
-          player.hands.each do |hand|
-            new_player = deal_card new_player, hand, @deck.random_card
-          end
-          new_player
-        end
-      end
+    def collect amount
+      puts 'collect'
+      @turn.next
     end
 
     def to_s

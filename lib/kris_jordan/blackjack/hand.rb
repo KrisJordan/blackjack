@@ -54,7 +54,11 @@ module KrisJordan::Blackjack
     end
 
     def to_s
-      @cards.map{ |c| c.to_s }.join() + ":" + value.to_s
+      if @cards.length > 0
+        @cards.map{ |c| c.to_s }.join() + ":" + value.to_s
+      else
+        ""
+      end
     end
 
     private
