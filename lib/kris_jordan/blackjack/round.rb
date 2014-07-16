@@ -47,6 +47,8 @@ module KrisJordan::Blackjack
 
     def initialize(deck, players, hands=Array.new, turn=TurnIterator.new)
       @deck    = deck
+
+      raise "Last player must be the dealer" if players[-1].class != Dealer
       @players = players
 
       if hands.length == players.length
@@ -69,11 +71,6 @@ module KrisJordan::Blackjack
     end
 
     def hand
-      # puts "@hands.length: #{@hands.length}"
-      # puts "@turn.player: #{@turn.player}"
-      # puts "@hands[p].length: #{@hands[@turn.player].length}"
-      # puts "@turn.hand: #{@turn.hand}"
-      # puts "@hands[p][h]: #{@hands[@turn.player][@turn.hand]}"
       @hands[@turn.player][@turn.hand]
     end
 
