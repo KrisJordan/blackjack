@@ -20,5 +20,9 @@ module KrisJordan::Blackjack
 
     end
 
+    def unmarshal
+      Object::const_get("KrisJordan::Blackjack::State::BetAction").send(:new,*[0])
+    end
+
   end
 end

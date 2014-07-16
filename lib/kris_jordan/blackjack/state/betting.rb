@@ -1,8 +1,18 @@
 module KrisJordan::Blackjack::State
 
   class Betting
-    def self.prompt deck, player, hand
-      BetAction.new 0
+    def self.prompt deck, player, hand, dealer_hand
+      if hand != dealer_hand
+        BetAction.new player.bet hand
+      else
+        SkipAction.new
+      end
+    end
+  end
+
+  class SkipAction
+    def transition round
+      round.next_turn
     end
   end
 
@@ -13,7 +23,9 @@ module KrisJordan::Blackjack::State
 
     def transition round
       puts "Bet #{@amount}"
-      round.next_turn
+      round.change_player(round.player.put_in(@amount))
+           .change_hand(round.hand.bet(@amount))
+           .next_turn
     end
   end
 

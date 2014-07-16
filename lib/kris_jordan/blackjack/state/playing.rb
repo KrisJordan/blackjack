@@ -1,7 +1,7 @@
 module KrisJordan::Blackjack::State
 
   class Playing
-    def self.prompt deck, player, hand
+    def self.prompt deck, player, hand, dealer
       puts hand.to_s
       unless hand.bust?
         case player.play hand

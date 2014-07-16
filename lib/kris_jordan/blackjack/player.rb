@@ -2,6 +2,20 @@ module KrisJordan::Blackjack
   class Player
     def initialize(chips)
       @chips = chips
+      freeze
+    end
+
+    def put_in chips
+      Player.new @chips - chips
+    end
+
+    def pay_out chips
+      Player.new @chips + chips
+    end
+
+    def bet hand
+      puts "How much?"
+      gets.chomp.to_i
     end
 
     def play hand

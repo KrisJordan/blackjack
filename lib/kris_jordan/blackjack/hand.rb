@@ -2,8 +2,11 @@ module KrisJordan::Blackjack
   class Hand
     include Comparable 
 
-    def initialize(cards = Array.new)
+    attr_reader :chips
+
+    def initialize(cards = Array.new, chips = 0)
       @cards = cards
+      @chips = chips
       freeze
     end
 
@@ -11,8 +14,12 @@ module KrisJordan::Blackjack
       @cards.length
     end
 
+    def bet(chips)
+      Hand.new @cards, @chips + chips
+    end
+
     def dealt(card)
-      Hand.new @cards.dup + [card]
+      Hand.new (@cards.dup + [card]), @chips
     end
 
     def possible_values

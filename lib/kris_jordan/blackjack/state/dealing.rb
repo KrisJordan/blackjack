@@ -1,7 +1,7 @@
 module KrisJordan::Blackjack::State
 
   class Dealing
-    def self.prompt deck, player, hand
+    def self.prompt deck, player, hand, dealer
       DealAction.new deck.random_card
     end
   end

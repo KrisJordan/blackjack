@@ -34,9 +34,7 @@ module KrisJordan::Blackjack
 
   class Round
 
-    attr_reader :players, :hands, :turn
-
-    attr_accessor :deck
+    attr_reader :deck, :players, :hands, :turn
 
     STATES = [
       State::Betting,
@@ -47,7 +45,7 @@ module KrisJordan::Blackjack
       State::Ending
     ]
 
-    def initialize(deck, players, hands=Array.new, turn=nil)
+    def initialize(deck, players, hands=Array.new, turn=TurnIterator.new)
       @deck    = deck
       @players = players
 
@@ -57,11 +55,7 @@ module KrisJordan::Blackjack
         @hands = players.length.times.map{[Hand.new]}
       end
 
-      if turn == nil
-        @turn  = TurnIterator.new
-      else
-        @turn  = turn
-      end
+      @turn = turn
 
       freeze
     end
@@ -70,17 +64,21 @@ module KrisJordan::Blackjack
       @players[@turn.player]
     end
 
+    def dealer_hand
+      @hands[@players.length-1][0]
+    end
+
     def hand
-      puts "@hands.length: #{@hands.length}"
-      puts "@turn.player: #{@turn.player}"
-      puts "@hands[p].length: #{@hands[@turn.player].length}"
-      puts "@turn.hand: #{@turn.hand}"
-      puts "@hands[p][h]: #{@hands[@turn.player][@turn.hand]}"
+      # puts "@hands.length: #{@hands.length}"
+      # puts "@turn.player: #{@turn.player}"
+      # puts "@hands[p].length: #{@hands[@turn.player].length}"
+      # puts "@turn.hand: #{@turn.hand}"
+      # puts "@hands[p][h]: #{@hands[@turn.player][@turn.hand]}"
       @hands[@turn.player][@turn.hand]
     end
 
     def next_action
-      STATES[@turn.state].prompt @deck, player, hand
+      STATES[@turn.state].prompt @deck, player, hand, dealer_hand
     end
 
     def next_turn
