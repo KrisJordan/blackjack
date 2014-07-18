@@ -10,7 +10,7 @@ module KrisJordan::Blackjack
                  .map{Deck.new}
                  .reduce(Deck.new){ |pile,deck| pile+deck }
 
-      @players = [Player.new(chips), Dealer.new]
+      @players = [Player.new("A", chips), Dealer.new]
 
       @round   = Round.new deck, @players
 

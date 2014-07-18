@@ -2,7 +2,7 @@ module KrisJordan::Blackjack
   class Hand
     include Comparable 
 
-    attr_reader :chips
+    attr_reader :chips, :cards
 
     def initialize(cards = Array.new, chips = 0)
       @cards = cards

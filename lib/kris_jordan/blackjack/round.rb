@@ -99,12 +99,12 @@ module KrisJordan::Blackjack
       Round.new @deck, @players, hands, @turn
     end
     
-    def to_s
-      @players.map do |player|
-        player.hands.map do |hand|
-          hand.to_s
-        end.join " - "
-      end.join "\n"
+    def start_message
+      puts "=== New Round ==="
+      # puts "Balances: "
+      # (0...players.count-1).each do |player|
+      #   puts " Player #{player+1}: #{@players[player].chips} chips"
+      # end
     end
 
   end

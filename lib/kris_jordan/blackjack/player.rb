@@ -1,21 +1,20 @@
 module KrisJordan::Blackjack
   class Player
-    def initialize(chips)
+
+    attr_reader :name, :chips
+
+    def initialize(name, chips)
+      @name  = name
       @chips = chips
       freeze
     end
 
     def put_in chips
-      Player.new @chips - chips
+      Player.new @name, @chips - chips
     end
 
     def pay_out chips
-      Player.new @chips + chips
-    end
-
-    def bet hand
-      puts "How much?"
-      gets.chomp.to_i
+      Player.new @name, @chips + chips
     end
 
     def play hand

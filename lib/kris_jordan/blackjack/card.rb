@@ -1,3 +1,5 @@
+require 'colorize'
+
 module KrisJordan::Blackjack
   class Card
 
