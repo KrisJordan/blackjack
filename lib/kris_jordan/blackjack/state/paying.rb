@@ -47,6 +47,10 @@ module KrisJordan::Blackjack::State
       round.change_player(round.player.pay_out(@chips))
            .next_turn
     end
+
+    def to_json
+      { classname: self.class.name, args: [@win,@chips] }
+    end
   end
 
   class LoseAction
@@ -60,6 +64,10 @@ module KrisJordan::Blackjack::State
 
     def transition round
       round.next_turn
+    end
+
+    def to_json
+      { classname: self.class.name, args: [@chips] }
     end
   end
 

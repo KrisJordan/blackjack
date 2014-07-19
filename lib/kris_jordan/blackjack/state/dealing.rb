@@ -29,6 +29,10 @@ module KrisJordan::Blackjack::State
            .next_turn
     end
 
+    def to_json
+      { classname: self.class.name, args: [@card.to_json] }
+    end
+
   end
 
 end

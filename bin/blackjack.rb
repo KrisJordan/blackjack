@@ -37,6 +37,39 @@ Choice.options do
   end
 end
 
-KrisJordan::Blackjack::Game.play Choice[:players], 
-                                 Choice[:chips], 
-                                 Choice[:decks]
+Game = KrisJordan::Blackjack::Game
+
+if Game.in_progress?
+  begin
+    resume = nil
+    until resume != nil
+      puts ""
+      puts "Game in progress, resume?"
+      puts "[Y]es"
+      puts "[N]o"
+      resume_input = $stdin.gets.chomp.downcase
+      case resume_input
+      when 'y'
+        resume = true
+      when 'n'
+        resume = false
+      end
+    end
+  rescue Interrupt, NameError
+    exit
+  end
+else
+  resume = false
+end
+
+if resume
+  game = Game.resume
+else
+  game = Game.new(
+    Choice[:players], 
+    Choice[:chips],
+    Choice[:decks]
+  )
+end
+
+game.play resume

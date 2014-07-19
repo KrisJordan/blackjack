@@ -18,10 +18,11 @@ module KrisJordan::Blackjack::State
           options = []
           options << StandAction.new
           options << HitAction.new(deck.random_card) if hand.can_hit?
-          options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split?
+          options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split? and player.chips >= hand.chips
 
           action = nil
           until action != nil
+            puts ""
             puts "#{player.name} you have"
             puts hand.cards.map{|c|c.pretty_print}.join " "
             puts "You can: "
@@ -58,6 +59,10 @@ module KrisJordan::Blackjack::State
       round.change_deck(round.deck.take(@card))
            .change_hand(round.hand.dealt(@card))
     end
+
+    def to_json
+      { classname: self.class.name, args: [@card.to_json] }
+    end
   end
 
   class SplitAction
@@ -81,6 +86,10 @@ module KrisJordan::Blackjack::State
            .change_player(round.player.put_in(round.hand.chips))
            .split_hand(round.hand.split([@first_card,@second_card]))
     end
+
+    def to_json
+      { classname: self.class.name, args: [@first_card.to_json,@second_card.to_json] }
+    end
   end
 
   class StandAction
@@ -97,6 +106,10 @@ module KrisJordan::Blackjack::State
     def transition round
       round.next_turn
     end
+
+    def to_json
+      { classname: self.class.name, args: [] }
+    end
   end
 
   class BustAction
@@ -106,6 +119,10 @@ module KrisJordan::Blackjack::State
 
     def transition round
       round.next_turn
+    end
+
+    def to_json
+      { classname: self.class.name, args: [] }
     end
   end
 

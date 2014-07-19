@@ -5,6 +5,7 @@ module KrisJordan::Blackjack::State
       if hand != dealer_hand
         chips = 0
         until chips > 0 and chips <= player.chips
+          puts ""
           puts "#{player.name}, you have #{player.chips} chips."
           puts "How many would you like to bet?"
           begin
@@ -28,11 +29,16 @@ module KrisJordan::Blackjack::State
     def describe round
       # No description
     end
+
+    def to_json
+      { classname: self.class.name, args: [] }
+    end
   end
 
   class BetAction
     def initialize amount
       @amount = amount
+      freeze
     end
 
     def transition round
@@ -43,6 +49,10 @@ module KrisJordan::Blackjack::State
 
     def describe round
       "#{round.player.name} puts in #{@amount} chips."
+    end
+
+    def to_json
+      { classname: self.class.name, args: [@amount] }
     end
   end
 
