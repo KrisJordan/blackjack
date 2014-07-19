@@ -38,8 +38,9 @@ Choice.options do
 end
 
 Game = KrisJordan::Blackjack::Game
+GameJournal = KrisJordan::Blackjack::GameJournal
 
-if Game.in_progress?
+if GameJournal.in_progress?
   begin
     resume = nil
     until resume != nil
@@ -63,7 +64,7 @@ else
 end
 
 if resume
-  game = Game.resume
+  game = GameJournal.resumed_game
 else
   game = Game.new(
     Choice[:players], 

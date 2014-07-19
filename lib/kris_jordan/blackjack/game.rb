@@ -1,32 +1,24 @@
 require 'json'
 
 module KrisJordan::Blackjack
-  class Game
 
+  class GameJournal
     JOURNAL_FILE = '.blackjack.aof'
-
-    attr_accessor :players, :deck, :round
 
     def self.in_progress?
       File.exist? JOURNAL_FILE
     end
 
-    def self.resume
+    def self.resumed_game
       game = nil
       File.open(JOURNAL_FILE, "r") do |file|
         index = 0
         file.each_line do |line|
           object = unmarshall(JSON[line])
-
           if index == 0
             game = object
           else
-            unless object.is_a? State::EndAction
-              game.round   = object.transition game.round
-              game.players = game.round.players.select { |p| p.dealer? or p.chips > 0 }
-            else
-              game.round = Round.new game.deck, game.players
-            end
+            game.take object
           end
           index += 1
         end
@@ -45,6 +37,32 @@ module KrisJordan::Blackjack
       end
       Object::const_get(classname).send(:new,*args)
     end
+
+    def self.begin game
+      clear_journal
+      write_journal game
+    end
+    
+    def self.clear
+      file = '.blackjack.aof'
+      if File.exist? file
+        File.delete('.blackjack.aof')
+      end
+    end
+
+    def self.write action
+      open('.blackjack.aof','a') do |f| 
+        json = action.to_json
+        json[:timestamp] = Time.now
+        f.puts JSON.generate json
+      end
+    end
+
+  end
+
+  class Game
+
+    attr_accessor :players, :deck, :round
 
     def initialize starting_players, starting_chips, decks_per_round
 
@@ -76,27 +94,26 @@ module KrisJordan::Blackjack
     end
 
     def play(resume=false)
-      new_journal unless resume
+      GameJournal.begin(self) unless resume
       while @players.count > 1 do
-        while action = @round.next_action
-          write_journal action
+        while action = @round.next_action and @players.length > 1
+          GameJournal.write action
           narrate action.describe @round
-          unless action.is_a? State::EndAction
-            @round   = action.transition @round
-            @players = @round.players
-          else
-            @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
-            break if @players.length == 1
-            @round = Round.new @deck, @players
-          end
+          take action
         end
       end
-      clear_journal
+      GameJournal.clear
       puts "\nGame over, thanks for playing!\n\n"
     end
 
-    def unmarshal
-      Object::const_get("KrisJordan::Blackjack::State::BetAction").send(:new,*[0])
+    def take action
+        unless action.is_a? State::EndAction
+          @round   = action.transition @round
+          @players = @round.players
+        else
+          @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
+          @round = Round.new @deck, @players
+        end
     end
 
     def to_json
@@ -109,26 +126,6 @@ module KrisJordan::Blackjack
 
     def narrate description
       puts "\n#{description}" if description
-    end
-
-    def new_journal
-      clear_journal
-      write_journal self
-    end
-    
-    def clear_journal
-      file = '.blackjack.aof'
-      if File.exist? file
-        File.delete('.blackjack.aof')
-      end
-    end
-
-    def write_journal action
-      open('.blackjack.aof','a') do |f| 
-        json = action.to_json
-        json[:timestamp] = Time.now
-        f.puts JSON.generate json
-      end
     end
 
   end
