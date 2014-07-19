@@ -83,8 +83,10 @@ module KrisJordan::Blackjack
           narrate action.describe @round
           unless action.is_a? State::EndAction
             @round   = action.transition @round
-            @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
+            @players = @round.players
           else
+            @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
+            break if @players.length == 1
             @round = Round.new @deck, @players
           end
         end
