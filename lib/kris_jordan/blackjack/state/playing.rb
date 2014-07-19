@@ -1,4 +1,5 @@
 module KrisJordan::Blackjack::State
+  Hand = KrisJordan::Blackjack::Hand
 
   class Playing
     def self.prompt deck, player, hand, dealer_hand
@@ -17,6 +18,7 @@ module KrisJordan::Blackjack::State
           options = []
           options << StandAction.new
           options << HitAction.new(deck.random_card) if hand.can_hit?
+          options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split?
 
           action = nil
           until action != nil
@@ -26,7 +28,7 @@ module KrisJordan::Blackjack::State
             options.each { |o| puts o.prompt }
             begin
               input = $stdin.gets.chomp
-            rescue
+            rescue Interrupt, NameError
               exit
             end
             action = options.find { |o| o.class::KEY == input.downcase }
@@ -55,6 +57,29 @@ module KrisJordan::Blackjack::State
     def transition round
       round.change_deck(round.deck.take(@card))
            .change_hand(round.hand.dealt(@card))
+    end
+  end
+
+  class SplitAction
+    KEY = 't'
+
+    def initialize first_card, second_card
+      @first_card  = first_card
+      @second_card = second_card
+    end
+
+    def prompt
+      " Spli[t]"
+    end
+
+    def describe round
+      "#{round.player.name} split."
+    end
+
+    def transition round
+      round.change_deck(round.deck.take(@first_card).take(@second_card))
+           .change_player(round.player.put_in(round.hand.chips))
+           .split_hand(round.hand.split([@first_card,@second_card]))
     end
   end
 

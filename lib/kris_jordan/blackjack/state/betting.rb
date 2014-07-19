@@ -9,7 +9,7 @@ module KrisJordan::Blackjack::State
           puts "How many would you like to bet?"
           begin
             chips = $stdin.gets.chomp.to_i
-          rescue
+          rescue Interrupt, NameError
             exit
           end
         end

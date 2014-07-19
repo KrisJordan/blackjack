@@ -22,6 +22,13 @@ module KrisJordan::Blackjack
       Hand.new (@cards.dup + [card]), @chips
     end
 
+    def split new_cards
+      (0...new_cards.length).map do |i|
+        Hand.new([@cards[i]],@chips)
+            .dealt(new_cards[i])
+      end
+    end
+
     def possible_values
       permute_recur(@cards.map(&:value))
         .uniq

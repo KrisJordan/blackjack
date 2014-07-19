@@ -82,6 +82,8 @@ module KrisJordan::Blackjack
       Round.new @deck, @players, @hands, @turn.next(self)
     end
 
+    # The following "mutators" are copy-on-write constructors
+    # creating new instances of Round.
     def change_deck deck
       Round.new deck, @players, @hands, @turn
     end
@@ -98,14 +100,13 @@ module KrisJordan::Blackjack
       hands[@turn.player][@turn.hand] = hand
       Round.new @deck, @players, hands, @turn
     end
-    
-    def start_message
-      puts "=== New Round ==="
-      # puts "Balances: "
-      # (0...players.count-1).each do |player|
-      #   puts " Player #{player+1}: #{@players[player].chips} chips"
-      # end
-    end
 
+    def split_hand new_hands
+      hands        = @hands.dup
+      hands[@turn.player] = hands[@turn.player].dup
+      hands[@turn.player][@turn.hand..@turn.hand] = new_hands
+      Round.new @deck, @players, hands, @turn
+    end
+    
   end
 end
