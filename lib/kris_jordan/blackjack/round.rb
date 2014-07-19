@@ -1,37 +1,4 @@
 module KrisJordan::Blackjack
-
-  class TurnIterator
-    attr_reader :state, :player, :hand
-
-    def initialize(state=0, player=0, hand=0)
-      @state  = state
-      @player = player
-      @hand   = hand
-      freeze
-    end
-
-    def next(round)
-      next_hand = @hand + 1
-      if next_hand < round.hands[@player].length
-        TurnIterator.new @state, @player, next_hand
-      else
-        next_player = @player + 1
-        if next_player < round.players.length
-          TurnIterator.new @state, next_player
-        else
-          next_state = @state + 1
-          if next_state < Round::STATES.length
-            TurnIterator.new next_state
-          else
-            false
-          end
-        end
-      end
-    end
-
-  end
-
-
   class Round
 
     attr_reader :deck, :players, :hands, :turn
@@ -62,28 +29,7 @@ module KrisJordan::Blackjack
       freeze
     end
 
-    def player
-      @players[@turn.player]
-    end
-
-    def dealer_hand
-      @hands[@players.length-1][0]
-    end
-
-    def hand
-      @hands[@turn.player][@turn.hand]
-    end
-
-    def next_action
-      STATES[@turn.state].prompt @deck, player, hand, dealer_hand
-    end
-
-    def next_turn
-      Round.new @deck, @players, @hands, @turn.next(self)
-    end
-
-    # The following "mutators" are copy-on-write constructors
-    # creating new instances of Round.
+    # Mutations are copy-on-write as rounds are immutable
     def change_deck deck
       Round.new deck, @players, @hands, @turn
     end
@@ -106,6 +52,27 @@ module KrisJordan::Blackjack
       hands[@turn.player] = hands[@turn.player].dup
       hands[@turn.player][@turn.hand..@turn.hand] = new_hands
       Round.new @deck, @players, hands, @turn
+    end
+
+    # Accessors based on current turn
+    def player
+      @players[@turn.player]
+    end
+
+    def dealer_hand
+      @hands[@players.length-1][0]
+    end
+
+    def hand
+      @hands[@turn.player][@turn.hand]
+    end
+
+    def next_action
+      STATES[@turn.state].prompt @deck, player, hand, dealer_hand
+    end
+
+    def next_turn
+      Round.new @deck, @players, @hands, @turn.next(self)
     end
     
   end
