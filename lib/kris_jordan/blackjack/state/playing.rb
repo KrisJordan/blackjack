@@ -18,7 +18,11 @@ module KrisJordan::Blackjack::State
           options = []
           options << StandAction.new
           options << HitAction.new(deck.random_card) if hand.can_hit?
-          options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split? and player.chips >= hand.chips
+
+          if player.chips >= hand.chips
+            options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split?
+            options << DoubleDownAction.new(deck.random_card) if hand.can_double_down?
+          end
 
           action = nil
           until action != nil
@@ -45,6 +49,7 @@ module KrisJordan::Blackjack::State
 
     def initialize card
       @card = card
+      freeze
     end
 
     def prompt 
@@ -65,12 +70,44 @@ module KrisJordan::Blackjack::State
     end
   end
 
+  class DoubleDownAction
+    KEY = 'd'
+
+    def initialize card
+      @card = card
+      freeze
+    end
+
+    def prompt
+      " [D]ouble down"
+    end
+
+    def describe round
+      "#{round.player.name} doubled down #{round.hand.pretty_print} #{@card.pretty_print}."
+    end
+
+    def transition round
+      round.change_deck(round.deck.take(@card))
+           .change_player(round.player.put_in(round.hand.chips))
+           .change_hand(
+              round.hand
+                   .bet(round.hand.chips)
+                   .dealt(@card))
+           .next_turn
+    end
+
+    def to_json
+      { classname: self.class.name, args: [@card.to_json] }
+    end
+  end
+
   class SplitAction
     KEY = 't'
 
     def initialize first_card, second_card
       @first_card  = first_card
       @second_card = second_card
+      freeze
     end
 
     def prompt

@@ -4,9 +4,10 @@ module KrisJordan::Blackjack
 
     attr_reader :chips, :cards
 
-    def initialize(cards = Array.new, chips = 0)
+    def initialize(cards = Array.new, chips = 0, doubled_down = false)
       @cards = cards
       @chips = chips
+      @doubled_down = doubled_down
       freeze
     end
 
@@ -15,11 +16,11 @@ module KrisJordan::Blackjack
     end
 
     def bet(chips)
-      Hand.new @cards, @chips + chips
+      Hand.new @cards, @chips + chips, @chips > 0
     end
 
     def dealt(card)
-      Hand.new (@cards.dup + [card]), @chips
+      Hand.new (@cards.dup + [card]), @chips, @doubled_down
     end
 
     def split new_cards
@@ -53,7 +54,7 @@ module KrisJordan::Blackjack
     end
 
     def can_hit?
-      length >= 2 and value < 21
+      length >= 2 and value < 21 and not @doubled_down
     end
 
     def can_split?
@@ -61,6 +62,7 @@ module KrisJordan::Blackjack
     end
 
     def can_double_down?
+      length == 2 and not @doubled_down and not blackjack?
     end
 
     def bust?
