@@ -28,5 +28,9 @@ module KrisJordan::Blackjack
         :stand
       end
     end
+
+    def dealer?
+      false
+    end
   end
 end

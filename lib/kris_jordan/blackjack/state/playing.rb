@@ -2,31 +2,36 @@ module KrisJordan::Blackjack::State
 
   class Playing
     def self.prompt deck, player, hand, dealer_hand
-      if hand === dealer_hand
-        if hand.value < 17
-          HitAction.new deck.random_card
-        else
-          StandAction.new
-        end
+      if hand.value == 0
+        BustAction.new
       else
-        unless hand.bust?
+        if player.dealer?
+          if hand.value >= 17
+            StandAction.new
+          elsif hand.value > 0
+            HitAction.new deck.random_card
+          else
+            BustAction.new
+          end
+        else
           options = []
           options << StandAction.new
           options << HitAction.new(deck.random_card) if hand.can_hit?
 
           action = nil
           until action != nil
-            puts ""
-            puts "Player #{player.name} you have"
+            puts "#{player.name} you have"
             puts hand.cards.map{|c|c.pretty_print}.join " "
             puts "You can: "
-            options.each { |o| puts o.print }
-            input = gets.chomp
+            options.each { |o| puts o.prompt }
+            begin
+              input = $stdin.gets.chomp
+            rescue
+              exit
+            end
             action = options.find { |o| o.class::KEY == input.downcase }
           end
           action
-        else
-          StandAction.new
         end
       end
     end
@@ -39,8 +44,12 @@ module KrisJordan::Blackjack::State
       @card = card
     end
 
-    def print
+    def prompt 
       " [H]it"
+    end
+
+    def describe round
+      "#{round.player.name} hits #{round.hand.pretty_print} #{@card.pretty_print}."
     end
 
     def transition round
@@ -52,12 +61,26 @@ module KrisJordan::Blackjack::State
   class StandAction
     KEY = 's'
 
+    def prompt
+      " [S]tand"
+    end
+
+    def describe round
+      "#{round.player.name} stands with #{round.hand.pretty_print}."
+    end
+
     def transition round
       round.next_turn
     end
+  end
 
-    def print
-      " [S]tand"
+  class BustAction
+    def describe round
+      "#{round.player.name} busts."
+    end
+
+    def transition round
+      round.next_turn
     end
   end
 

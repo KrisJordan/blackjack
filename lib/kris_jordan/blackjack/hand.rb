@@ -68,6 +68,10 @@ module KrisJordan::Blackjack
       end
     end
 
+    def pretty_print
+      cards.map{|c|c.pretty_print}.join " "
+    end
+
     private
 
     def permute_recur(list)

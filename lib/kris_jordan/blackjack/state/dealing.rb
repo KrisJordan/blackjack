@@ -2,24 +2,25 @@ module KrisJordan::Blackjack::State
 
   class Dealing
     def self.prompt deck, player, hand, dealer_hand
-      card = deck.random_card
-      if hand.length == 1
-        puts ""
-        if hand === dealer_hand
-          puts "Dealer"
-          puts "#{hand.cards[0].pretty_print} #{" ?? ".on_white}"
-        else
-          puts "Player #{player.name}"
-          puts "#{hand.cards[0].pretty_print} #{card.pretty_print}"
-        end
-      end
-      DealAction.new card
+      DealAction.new deck.random_card
     end
   end
 
   class DealAction
+
     def initialize card
       @card = card
+    end
+
+    def describe round
+      player = round.player
+
+      hand = round.hand
+      unless player.dealer? and hand.cards.length == 1
+        "#{player.name} dealt #{hand.dealt(@card).pretty_print}"
+      else
+        "#{player.name} dealt #{hand.pretty_print} #{' ?? '.on_white}"
+      end
     end
 
     def transition round
@@ -27,6 +28,7 @@ module KrisJordan::Blackjack::State
            .change_hand(round.hand.dealt(@card))
            .next_turn
     end
+
   end
 
 end

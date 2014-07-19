@@ -24,10 +24,19 @@ Choice.options do
     default 1
   end
 
+  option :decks do
+    long    '--decks=Decks'
+    desc    '# of decks'
+    cast Integer
+    default 2
+  end
+
   option :help do
     long '--help'
     desc 'Show this message'
   end
 end
 
-KrisJordan::Blackjack::Game.play
+KrisJordan::Blackjack::Game.play Choice[:players], 
+                                 Choice[:chips], 
+                                 Choice[:decks]

@@ -1,8 +1,12 @@
 module KrisJordan::Blackjack
   class Dealer
 
-    def pay_out chips
-      self
+    def name
+      "Dealer"
+    end
+
+    def dealer?
+      true
     end
 
   end
