@@ -13,15 +13,12 @@ module KrisJordan::Blackjack
       @round = Round.new @deck, @players
     end
 
-
     def play(resume=false)
       GameJournal.begin(self) unless resume
-      while @players.count > 1 do
-        while action = @round.next_action and @players.length > 1
-          GameJournal.write action
-          narrate action.describe @round
-          take action
-        end
+      while action = @round.next_action and @players.count > 1
+        GameJournal.write action
+        narrate action.describe @round
+        take action
       end
       GameJournal.clear
       puts "\nGame over, thanks for playing!\n\n"
@@ -32,13 +29,12 @@ module KrisJordan::Blackjack
     end
 
     def take action
-        unless action.is_a? State::EndAction
-          @round   = action.transition @round
-          @players = @round.players
-        else
-          @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
-          @round = Round.new @deck, @players
-        end
+      unless action.is_a? State::EndAction
+        @round   = action.transition @round
+      else
+        @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
+        @round   = Round.new @deck, @players
+      end
     end
 
     def to_json
