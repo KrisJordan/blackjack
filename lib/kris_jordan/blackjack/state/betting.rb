@@ -1,6 +1,8 @@
 module KrisJordan::Blackjack::State
 
   class Betting
+    Skip = KrisJordan::Blackjack::Action::Skip
+
     def self.prompt deck, player, hand, dealer_hand
       if hand != dealer_hand
         chips = 0
@@ -16,22 +18,8 @@ module KrisJordan::Blackjack::State
         end
         BetAction.new chips
       else
-        SkipAction.new
+        Skip.new
       end
-    end
-  end
-
-  class SkipAction
-    def transition round
-      round.next_turn
-    end
-
-    def describe round
-      # No description
-    end
-
-    def to_json
-      { classname: self.class.name, args: [] }
     end
   end
 

@@ -1,10 +1,11 @@
 module KrisJordan::Blackjack::State
 
   class Paying
+    Skip = KrisJordan::Blackjack::Action::Skip
 
     def self.prompt deck, player, hand, dealer_hand
       if player.dealer?
-        SkipAction.new
+        Skip.new
       else
         if hand.bust?
           LoseAction.new hand.chips
