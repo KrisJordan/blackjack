@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+# Command line parsing
+gem 'choice'
+
+# CLI Color
 gem 'colorize'
 
 group :development do

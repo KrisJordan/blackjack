@@ -190,10 +190,10 @@ describe Hand do
     end
   end
 
-  describe "#take" do
+  describe "#dealt" do
     before :each do
       @start_hand  = @an_empty_hand
-      @new_hand    = @start_hand.take Card.new :jack, :heart
+      @new_hand    = @start_hand.dealt Card.new :jack, :heart
     end
 
     it "should return a new instance" do

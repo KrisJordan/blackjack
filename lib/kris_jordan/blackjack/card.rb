@@ -1,3 +1,5 @@
+require 'colorize'
+
 module KrisJordan::Blackjack
   class Card
 
@@ -8,8 +10,10 @@ module KrisJordan::Blackjack
     RANKS   = [ :ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, :jack, :queen, :king ]
 
     def initialize(rank,suit)
+      rank = rank.to_sym if rank.is_a? String
       raise "Invalid rank: #{rank}" unless RANKS.include? rank
       @rank = rank
+      suit = suit.to_sym if suit.is_a? String
       raise "Invalid suit: #{suit}" unless SUITS.include? suit
       @suit = suit
       freeze
@@ -73,6 +77,10 @@ module KrisJordan::Blackjack
 
     def pretty_print
       to_s.colorize(color).on_white
+    end
+
+    def to_json
+      { classname: self.class.name, args: [@rank,@suit] }
     end
 
   end

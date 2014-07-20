@@ -2,8 +2,12 @@ module KrisJordan::Blackjack
   class Hand
     include Comparable 
 
-    def initialize(cards = Array.new)
+    attr_reader :chips, :cards
+
+    def initialize(cards = Array.new, chips = 0, doubled_down = false)
       @cards = cards
+      @chips = chips
+      @doubled_down = doubled_down
       freeze
     end
 
@@ -11,8 +15,19 @@ module KrisJordan::Blackjack
       @cards.length
     end
 
-    def take(card)
-      Hand.new @cards.dup + [card]
+    def bet(chips)
+      Hand.new @cards, @chips + chips, @chips > 0
+    end
+
+    def dealt(card)
+      Hand.new (@cards.dup + [card]), @chips, @doubled_down
+    end
+
+    def split new_cards
+      (0...new_cards.length).map do |i|
+        Hand.new([@cards[i]],@chips)
+            .dealt(new_cards[i])
+      end
     end
 
     def possible_values
@@ -39,7 +54,7 @@ module KrisJordan::Blackjack
     end
 
     def can_hit?
-      length >= 2 and value < 21
+      length >= 2 and value < 21 and not @doubled_down
     end
 
     def can_split?
@@ -47,10 +62,23 @@ module KrisJordan::Blackjack
     end
 
     def can_double_down?
+      length == 2 and not @doubled_down and not blackjack?
     end
 
     def bust?
       length > 0 and value == 0
+    end
+
+    def to_s
+      if @cards.length > 0
+        @cards.map{ |c| c.to_s }.join() + ":" + value.to_s
+      else
+        ""
+      end
+    end
+
+    def pretty_print
+      cards.map{|c|c.pretty_print}.join " "
     end
 
     private

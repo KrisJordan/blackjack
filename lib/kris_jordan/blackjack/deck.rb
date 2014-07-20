@@ -34,5 +34,11 @@ module KrisJordan::Blackjack
       Deck.new(@cards + deck.cards)
     end
 
+    def *(decks)
+       (decks-1).times
+                .map{self}
+                .reduce(Deck.new){ |pile,deck| pile+deck }
+    end
+
   end
 end
