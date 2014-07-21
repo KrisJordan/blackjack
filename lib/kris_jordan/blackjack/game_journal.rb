@@ -15,7 +15,7 @@ module KrisJordan::Blackjack
           if index == 0
             game = object
           else
-            game.dispatch object
+            game.handle object
           end
           index += 1
         end

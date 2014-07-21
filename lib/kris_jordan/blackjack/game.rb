@@ -18,17 +18,13 @@ module KrisJordan::Blackjack
       while event = @round.next_event and @players.count > 1
         GameJournal.write event
         narrate event.describe @round
-        dispatch event
+        handle event
       end
       GameJournal.clear
       puts "\nGame over, thanks for playing!\n\n"
     end
 
-    def narrate description
-      puts "\n#{description}" if description
-    end
-
-    def dispatch event
+    def handle event
       unless event.is_a? Event::End
         @round   = event.transform @round
       else
@@ -42,6 +38,10 @@ module KrisJordan::Blackjack
     end
 
     private
+
+    def narrate description
+      puts "\n#{description}" if description
+    end
 
     def initialize_chips starting_chips
       if starting_chips < 1
