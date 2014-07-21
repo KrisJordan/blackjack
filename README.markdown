@@ -7,14 +7,14 @@
 - Doubling down
 - Variable # of decks
 - Variable # of starting chips
-- Quitting and resuming play by replaying an append-only write-ahead log
+- Killing process and resuming game via write ahead log
 
 ## Playing
 
 ### Requirements
 
-- Ruby 1.9+
-- Bundler
+- [Ruby 1.9+](https://www.ruby-lang.org/en/downloads/)
+- [Bundler](http://bundler.io/)
 
 ### Install & Play
 
@@ -25,7 +25,7 @@
 
 ### Run rspec tests
 
-`bundle exec rspec`
+`bundle exec rspec` or `guard` for interactive, watch-based testing with [guard](https://github.com/guard/guard).
 
 ### Command-line Options
 
