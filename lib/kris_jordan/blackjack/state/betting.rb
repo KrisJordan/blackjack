@@ -2,6 +2,7 @@ module KrisJordan::Blackjack::State
 
   class Betting
     Skip = KrisJordan::Blackjack::Action::Skip
+    Bet  = KrisJordan::Blackjack::Action::Bet
 
     def self.prompt deck, player, hand, dealer_hand
       if hand != dealer_hand
@@ -16,31 +17,10 @@ module KrisJordan::Blackjack::State
             exit
           end
         end
-        BetAction.new chips
+        Bet.new chips
       else
         Skip.new
       end
-    end
-  end
-
-  class BetAction
-    def initialize amount
-      @amount = amount
-      freeze
-    end
-
-    def transition round
-      round.change_player(round.player.put_in(@amount))
-           .change_hand(round.hand.bet(@amount))
-           .next_turn
-    end
-
-    def describe round
-      "#{round.player.name} puts in #{@amount} chips."
-    end
-
-    def to_json
-      { classname: self.class.name, args: [@amount] }
     end
   end
 

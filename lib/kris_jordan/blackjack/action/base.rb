@@ -1,6 +1,6 @@
 module KrisJordan::Blackjack::Action
 
-  class Action
+  class Base
     def transition round
       round
     end

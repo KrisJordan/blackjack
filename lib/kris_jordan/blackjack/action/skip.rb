@@ -1,6 +1,6 @@
 module KrisJordan::Blackjack::Action
 
-  class Skip < Action
+  class Skip < Base
     def transition round
       round.next_turn
     end
