@@ -42,7 +42,7 @@
 ### "Pausing" a Game
 
 Break out of / pause a game at any point by interrupting
-with `Ctrl+C`.
+with `Ctrl+C` or killing the process.
 
 ### Resuming Game
 
