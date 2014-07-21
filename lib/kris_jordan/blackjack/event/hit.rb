@@ -21,7 +21,7 @@ module KrisJordan::Blackjack::Event
            .change_hand(round.hand.dealt(@card))
     end
 
-    def to_json
+    def args
       [@card]
     end
   end

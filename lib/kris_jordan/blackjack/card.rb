@@ -79,7 +79,7 @@ module KrisJordan::Blackjack
       to_s.colorize(color).on_white
     end
 
-    def to_json
+    def args
       [@rank, @suit]
     end
 

@@ -4,6 +4,7 @@ module KrisJordan::Blackjack::Event
 
     def initialize card
       @card = card
+      freeze
     end
 
     def describe round
@@ -23,7 +24,7 @@ module KrisJordan::Blackjack::Event
            .next_turn
     end
 
-    def to_json
+    def args
       [@card]
     end
 

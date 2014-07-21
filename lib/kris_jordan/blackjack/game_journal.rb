@@ -17,7 +17,7 @@ module KrisJordan::Blackjack
     end
 
     # Create a game with the first line, 
-    def self.resumed_game
+    def self.resumed_game verbose=false
       game = nil
       File.open(JOURNAL_FILE, "r") do |file|
         index = 0
@@ -29,6 +29,7 @@ module KrisJordan::Blackjack
           else
             # Subsequent lines are Events
             event = object # TODO: remove
+            game.narrate event.describe game.round if verbose
             game.handle event
           end
           index += 1
@@ -55,7 +56,7 @@ module KrisJordan::Blackjack
       else
         {
           classname: object.class.name,
-          args:      object.to_json.map { |o| marshal o },
+          args:      object.args.map { |o| marshal o },
           timestamp: Time.now
         }
       end

@@ -16,8 +16,8 @@ module KrisJordan::Blackjack
     # Interactive event loop prompts the player for input.
     # Inputs generate events.
     # Events are written to the write-ahead log, printed, and handled.
-    def play(resume=false)
-      GameJournal.begin(self) unless resume
+    # If gameplay is resumed, a flag is passed to avoid clobbering
+    def play
       while @players.count > 1 and event = @round.prompt
         GameJournal.write event
         narrate event.describe @round
@@ -25,6 +25,11 @@ module KrisJordan::Blackjack
       end
       GameJournal.clear
       puts "\nGame over, thanks for playing!\n\n"
+    end
+
+    # Output description to stdout
+    def narrate description
+      puts "\n#{description}" if description
     end
 
     # Given an `Event` the game's `@round` is transformed to its next
@@ -39,15 +44,12 @@ module KrisJordan::Blackjack
       end
     end
 
-    def to_json
+    # Arguments needed to reconstruct game object. Needed for serialization.
+    def args
       [ @starting_chips, @starting_players, @decks_per_round ]
     end
 
     private
-
-    def narrate description
-      puts "\n#{description}" if description
-    end
 
     def initialize_chips starting_chips
       if starting_chips < 1

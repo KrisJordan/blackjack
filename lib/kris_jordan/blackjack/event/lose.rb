@@ -9,7 +9,7 @@ module KrisJordan::Blackjack::Event
       "#{round.player.name} loses #{@chips} chips."
     end
 
-    def to_json
+    def args
       [@chips]
     end
   end

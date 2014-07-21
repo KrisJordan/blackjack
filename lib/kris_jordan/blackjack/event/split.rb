@@ -23,7 +23,7 @@ module KrisJordan::Blackjack::Event
            .split_hand(round.hand.split([@first_card,@second_card]))
     end
 
-    def to_json
+    def args
       [@first_card, @second_card]
     end
   end

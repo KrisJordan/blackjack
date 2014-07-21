@@ -26,7 +26,7 @@ module KrisJordan::Blackjack::Event
            .next_turn
     end
 
-    def to_json
+    def args
       [@card]
     end
   end

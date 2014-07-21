@@ -16,7 +16,7 @@ module KrisJordan::Blackjack::Event
       "#{round.player.name} puts in #{@amount} chips."
     end
 
-    def to_json
+    def args
       [@amount]
     end
   end
