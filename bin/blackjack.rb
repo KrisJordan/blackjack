@@ -31,6 +31,11 @@ Choice.options do
     default 2
   end
 
+  option :verbose do
+    long '--verbose'
+    desc 'Resume game and print all events'
+  end
+
   option :help do
     long '--help'
     desc 'Show this message'
@@ -39,38 +44,49 @@ end
 
 Game = KrisJordan::Blackjack::Game
 GameJournal = KrisJordan::Blackjack::GameJournal
-
-if GameJournal.in_progress?
-  begin
+def main
+  if GameJournal.in_progress?
     resume = nil
-    until resume != nil
-      puts ""
-      puts "Game in progress, resume?"
-      puts "[Y]es"
-      puts "[N]o"
-      resume_input = $stdin.gets.chomp.downcase
-      case resume_input
-      when 'y'
-        resume = true
-      when 'n'
-        resume = false
-      end
+
+    # Verbose mode always resumes, if possible
+    if Choice[:verbose]
+      resume = true
     end
-  rescue Interrupt, NameError
-    exit
+
+    begin
+      until resume != nil
+        puts ""
+        puts "Game in progress, resume?"
+        puts "[Y]es"
+        puts "[N]o"
+        resume_input = $stdin.gets.chomp.downcase
+        case resume_input
+        when 'y'
+          resume = true
+        when 'n'
+          resume = false
+        end
+      end
+    rescue Interrupt, NameError
+      exit
+    end
+  else
+    resume = false
   end
-else
-  resume = false
+
+  if resume
+    puts Choice[:verbose]
+    game = GameJournal.resumed_game Choice[:verbose]
+  else
+    game = Game.new(
+      Choice[:chips],
+      Choice[:players], 
+      Choice[:decks]
+    )
+    GameJournal.begin(game)
+  end
+
+  game.play
 end
 
-if resume
-  game = GameJournal.resumed_game
-else
-  game = Game.new(
-    Choice[:chips],
-    Choice[:players], 
-    Choice[:decks]
-  )
-end
-
-game.play resume
+main
