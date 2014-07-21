@@ -6,7 +6,7 @@ module KrisJordan::Blackjack::Event
       freeze
     end
 
-    def transition round
+    def transform round
       round.change_player(round.player.put_in(@amount))
            .change_hand(round.hand.bet(@amount))
            .next_turn

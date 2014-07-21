@@ -1,7 +1,7 @@
 module KrisJordan::Blackjack::Event
 
   class End < Base
-    def transition round
+    def transform round
       raise "This should never get called."
     end
   end

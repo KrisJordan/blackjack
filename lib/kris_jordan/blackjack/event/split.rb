@@ -17,7 +17,7 @@ module KrisJordan::Blackjack::Event
       "#{round.player.name} split."
     end
 
-    def transition round
+    def transform round
       round.change_deck(round.deck.take(@first_card).take(@second_card))
            .change_player(round.player.put_in(round.hand.chips))
            .split_hand(round.hand.split([@first_card,@second_card]))

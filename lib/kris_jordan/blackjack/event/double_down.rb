@@ -16,7 +16,7 @@ module KrisJordan::Blackjack::Event
       "#{round.player.name} doubled down #{round.hand.pretty_print} #{@card.pretty_print}."
     end
 
-    def transition round
+    def transform round
       round.change_deck(round.deck.take(@card))
            .change_player(round.player.put_in(round.hand.chips))
            .change_hand(

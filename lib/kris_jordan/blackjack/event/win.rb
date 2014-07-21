@@ -10,7 +10,7 @@ module KrisJordan::Blackjack::Event
       "#{round.player.name} wins by #{@reason}, receives #{@chips} chips."
     end
 
-    def transition round
+    def transform round
       round.change_player(round.player.pay_out(@chips))
            .next_turn
     end

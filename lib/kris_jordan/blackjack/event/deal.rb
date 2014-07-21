@@ -17,7 +17,7 @@ module KrisJordan::Blackjack::Event
       end
     end
 
-    def transition round
+    def transform round
       round.change_deck(round.deck.take(@card))
            .change_hand(round.hand.dealt(@card))
            .next_turn

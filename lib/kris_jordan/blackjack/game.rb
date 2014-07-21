@@ -30,7 +30,7 @@ module KrisJordan::Blackjack
 
     def dispatch event
       unless event.is_a? Event::End
-        @round   = event.transition @round
+        @round   = event.transform @round
       else
         @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
         @round   = Round.new @deck, @players

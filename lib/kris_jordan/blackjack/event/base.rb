@@ -3,7 +3,7 @@ module KrisJordan::Blackjack::Event
   class Base
     KEY = nil
 
-    def transition round
+    def transform round
       round.next_turn
     end
 
