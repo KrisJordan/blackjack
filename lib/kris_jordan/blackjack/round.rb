@@ -42,7 +42,7 @@ module KrisJordan::Blackjack
     
     def set_deck &block
       new_deck = block.call deck
-      Round.new deck, @players, @hands, @turn
+      Round.new new_deck, @players, @hands, @turn
     end
 
     def set_player &block
