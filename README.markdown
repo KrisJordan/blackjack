@@ -72,7 +72,12 @@ largely as an exercise to try them in a Ruby codebase:
 * bin/blackjack.rb - command-line parser/runner
 * game.rb - where mutable state of current players and round is kept, event loop runs here
 * Primatives
+** card.rb
+** hand.rb - contains both cards in hand and chips riding on hand
+** deck.rb - a stack of cards
+** player.rb
 ** 
+
 
 ## License
 
