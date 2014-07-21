@@ -69,4 +69,13 @@ describe Deck do
       end
     end
   end
+
+  describe "#*" do
+    it "should create 2 copies of decks multiplied by 2" do
+      expect( (Deck.new * 2).cards.length ).to eq (52*2)
+    end
+    it "should create 3 copies of decks multiplied by 3" do
+      expect( (Deck.new * 3).cards.length ).to eq (52*3)
+    end
+  end
 end
