@@ -15,22 +15,18 @@ module KrisJordan::Blackjack
 
     def play(resume=false)
       GameJournal.begin(self) unless resume
-      while action = @round.next_action and @players.count > 1
-        GameJournal.write action
-        narrate action.describe @round
-        take action
+      while event = @round.next_event and @players.count > 1
+        GameJournal.write event
+        narrate event.describe @round
+        handle event
       end
       GameJournal.clear
       puts "\nGame over, thanks for playing!\n\n"
     end
 
-    def narrate description
-      puts "\n#{description}" if description
-    end
-
-    def take action
-      unless action.is_a? State::EndAction
-        @round   = action.transition @round
+    def handle event
+      unless event.is_a? Event::End
+        @round   = event.transform @round
       else
         @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
         @round   = Round.new @deck, @players
@@ -38,14 +34,14 @@ module KrisJordan::Blackjack
     end
 
     def to_json
-      { classname: self.class.name, args: [
-          @starting_players,
-          @starting_chips,
-          @decks_per_round
-      ] }
+      [ @starting_players, @starting_chips, @decks_per_round ]
     end
 
     private
+
+    def narrate description
+      puts "\n#{description}" if description
+    end
 
     def initialize_chips starting_chips
       if starting_chips < 1

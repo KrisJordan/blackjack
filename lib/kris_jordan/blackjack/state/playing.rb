@@ -1,31 +1,34 @@
 module KrisJordan::Blackjack::State
-  Hand = KrisJordan::Blackjack::Hand
 
   class Playing
+    Hit         = KrisJordan::Blackjack::Event::Hit
+    Stand       = KrisJordan::Blackjack::Event::Stand
+    Bust        = KrisJordan::Blackjack::Event::Bust
+    Split       = KrisJordan::Blackjack::Event::Split
+    DoubleDown  = KrisJordan::Blackjack::Event::DoubleDown
+
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
-        BustAction.new
+        Bust.new
       else
         if player.dealer?
           if hand.value >= 17
-            StandAction.new
-          elsif hand.value > 0
-            HitAction.new deck.random_card
+            Stand.new
           else
-            BustAction.new
+            Hit.new deck.random_card
           end
         else
           options = []
-          options << StandAction.new
-          options << HitAction.new(deck.random_card) if hand.can_hit?
+          options << Stand.new
+          options << Hit.new(deck.random_card) if hand.can_hit?
 
           if player.chips >= hand.chips
-            options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split?
-            options << DoubleDownAction.new(deck.random_card) if hand.can_double_down?
+            options << Split.new(deck.random_card, deck.random_card) if hand.can_split?
+            options << DoubleDown.new(deck.random_card) if hand.can_double_down?
           end
 
-          action = nil
-          until action != nil
+          event = nil
+          until event != nil
             puts ""
             puts "#{player.name} you have"
             puts hand.cards.map{|c|c.pretty_print}.join " "
@@ -36,130 +39,11 @@ module KrisJordan::Blackjack::State
             rescue Interrupt, NameError
               exit
             end
-            action = options.find { |o| o.class::KEY == input.downcase }
+            event = options.find { |o| o.class::KEY == input.downcase }
           end
-          action
+          event
         end
       end
-    end
-  end
-
-  class HitAction
-    KEY = 'h'
-
-    def initialize card
-      @card = card
-      freeze
-    end
-
-    def prompt 
-      " [H]it"
-    end
-
-    def describe round
-      "#{round.player.name} hits #{round.hand.pretty_print} #{@card.pretty_print}."
-    end
-
-    def transition round
-      round.change_deck(round.deck.take(@card))
-           .change_hand(round.hand.dealt(@card))
-    end
-
-    def to_json
-      { classname: self.class.name, args: [@card.to_json] }
-    end
-  end
-
-  class DoubleDownAction
-    KEY = 'd'
-
-    def initialize card
-      @card = card
-      freeze
-    end
-
-    def prompt
-      " [D]ouble down"
-    end
-
-    def describe round
-      "#{round.player.name} doubled down #{round.hand.pretty_print} #{@card.pretty_print}."
-    end
-
-    def transition round
-      round.change_deck(round.deck.take(@card))
-           .change_player(round.player.put_in(round.hand.chips))
-           .change_hand(
-              round.hand
-                   .bet(round.hand.chips)
-                   .dealt(@card))
-           .next_turn
-    end
-
-    def to_json
-      { classname: self.class.name, args: [@card.to_json] }
-    end
-  end
-
-  class SplitAction
-    KEY = 't'
-
-    def initialize first_card, second_card
-      @first_card  = first_card
-      @second_card = second_card
-      freeze
-    end
-
-    def prompt
-      " Spli[t]"
-    end
-
-    def describe round
-      "#{round.player.name} split."
-    end
-
-    def transition round
-      round.change_deck(round.deck.take(@first_card).take(@second_card))
-           .change_player(round.player.put_in(round.hand.chips))
-           .split_hand(round.hand.split([@first_card,@second_card]))
-    end
-
-    def to_json
-      { classname: self.class.name, args: [@first_card.to_json,@second_card.to_json] }
-    end
-  end
-
-  class StandAction
-    KEY = 's'
-
-    def prompt
-      " [S]tand"
-    end
-
-    def describe round
-      "#{round.player.name} stands with #{round.hand.pretty_print}."
-    end
-
-    def transition round
-      round.next_turn
-    end
-
-    def to_json
-      { classname: self.class.name, args: [] }
-    end
-  end
-
-  class BustAction
-    def describe round
-      "#{round.player.name} busts."
-    end
-
-    def transition round
-      round.next_turn
-    end
-
-    def to_json
-      { classname: self.class.name, args: [] }
     end
   end
 

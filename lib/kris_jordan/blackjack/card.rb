@@ -80,7 +80,7 @@ module KrisJordan::Blackjack
     end
 
     def to_json
-      { classname: self.class.name, args: [@rank,@suit] }
+      [@rank, @suit]
     end
 
   end

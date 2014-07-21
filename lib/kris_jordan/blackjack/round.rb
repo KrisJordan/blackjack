@@ -67,7 +67,7 @@ module KrisJordan::Blackjack
       @hands[@turn.player][@turn.hand]
     end
 
-    def next_action
+    def next_event
       STATES[@turn.state].prompt @deck, player, hand, dealer_hand
     end
 
