@@ -49,7 +49,7 @@ with `Ctrl+C` or killing the process.
 To resume a game, rerun `./blackjack` in the same directory
 and press `y`, or run with the `--verbose` flag.
 
-## Organizational Notes
+## Architectural Notes
 
 The architecture of this project began with a few first principles,
 largely as an exercise to try them in a Ruby codebase:
