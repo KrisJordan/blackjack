@@ -73,7 +73,7 @@ largely as an exercise to try them in a Ruby codebase:
 
 ## Codewalk, Top-down
 
-* Primatives
+* Primitives
  * card.rb - the atom
  * hand.rb - contains both cards in hand and chips riding on hand
  * deck.rb - a stack of cards
