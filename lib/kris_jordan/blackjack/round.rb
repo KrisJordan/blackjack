@@ -40,24 +40,28 @@ module KrisJordan::Blackjack
       Round.new @deck, @players, @hands, @turn.next(self)
     end
     
-    def change_deck deck
+    def set_deck &block
+      new_deck = block.call deck
       Round.new deck, @players, @hands, @turn
     end
 
-    def change_player player
+    def set_player &block
+      new_player = block.call player
       players = @players.dup
-      players[@turn.player] = player
+      players[@turn.player] = new_player
       Round.new @deck, players, @hands, @turn
     end
 
-    def change_hand hand
+    def set_hand &block
+      new_hand = block.call hand
       hands = @hands.dup
       hands[@turn.player] = hands[@turn.player].dup
-      hands[@turn.player][@turn.hand] = hand
+      hands[@turn.player][@turn.hand] = new_hand
       Round.new @deck, @players, hands, @turn
     end
 
-    def split_hand new_hands
+    def split_hand &block
+      new_hands    = block.call hand
       hands        = @hands.dup
       hands[@turn.player] = hands[@turn.player].dup
       hands[@turn.player][@turn.hand..@turn.hand] = new_hands

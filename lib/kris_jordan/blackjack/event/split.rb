@@ -18,9 +18,10 @@ module KrisJordan::Blackjack::Event
     end
 
     def transform round
-      round.change_deck(round.deck.take(@first_card).take(@second_card))
-           .change_player(round.player.put_in(round.hand.chips))
-           .split_hand(round.hand.split([@first_card,@second_card]))
+      chips = round.hand.chips
+      round.set_deck   { |deck|   deck.take(@first_card).take(@second_card) }
+           .set_player { |player| player.put_in chips }
+           .split_hand { |hand|   hand.split [@first_card, @second_card] }
     end
 
     def args

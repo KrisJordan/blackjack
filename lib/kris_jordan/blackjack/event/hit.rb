@@ -17,8 +17,8 @@ module KrisJordan::Blackjack::Event
     end
 
     def transform round
-      round.change_deck(round.deck.take(@card))
-           .change_hand(round.hand.dealt(@card))
+      round.set_deck { |deck| deck.take @card }
+           .set_hand { |hand| hand.dealt @card }
     end
 
     def args

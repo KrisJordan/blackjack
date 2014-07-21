@@ -7,8 +7,8 @@ module KrisJordan::Blackjack::Event
     end
 
     def transform round
-      round.change_player(round.player.put_in(@amount))
-           .change_hand(round.hand.bet(@amount))
+      round.set_player { |player| player.put_in @amount }
+           .set_hand   { |hand|   hand.bet @amount }
            .next_turn
     end
 

@@ -17,12 +17,10 @@ module KrisJordan::Blackjack::Event
     end
 
     def transform round
-      round.change_deck(round.deck.take(@card))
-           .change_player(round.player.put_in(round.hand.chips))
-           .change_hand(
-              round.hand
-                   .bet(round.hand.chips)
-                   .dealt(@card))
+      chips = round.hand.chips
+      round.set_deck   { |deck|   deck.take @card }
+           .set_player { |player| player.put_in chips }
+           .set_hand   { |hand|   hand.bet(chips).dealt(@card) }
            .next_turn
     end
 

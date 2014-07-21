@@ -11,12 +11,12 @@ module KrisJordan::Blackjack::Event
     end
 
     def transform round
-      round.change_player(round.player.pay_out(@chips))
+      round.set_player { |player| player.pay_out @chips }
            .next_turn
     end
 
     def args
-      [@reason,@chips]
+      [@reason, @chips]
     end
   end
 
