@@ -13,12 +13,11 @@ module KrisJordan::Blackjack
       @round = Round.new @deck, @players
     end
 
-    # Interactive event loop prompts the player for input.
-    # Inputs generate events.
+    # Event loop prompts the round/player for the next event.
     # Events are written to the write-ahead log, printed, and handled.
-    # If gameplay is resumed, a flag is passed to avoid clobbering
+    # The game ends when all but the dealer are remaining.
     def play
-      while @players.count > 1 and event = @round.prompt
+      while event = @round.prompt and @players.count > 1
         GameJournal.write event
         narrate event.describe @round
         handle event
