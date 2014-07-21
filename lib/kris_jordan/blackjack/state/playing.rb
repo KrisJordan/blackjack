@@ -1,9 +1,10 @@
 module KrisJordan::Blackjack::State
 
   class Playing
-    Hit   = KrisJordan::Blackjack::Action::Hit
-    Stand = KrisJordan::Blackjack::Action::Stand
-    Bust  = KrisJordan::Blackjack::Action::Bust
+    Hit     = KrisJordan::Blackjack::Action::Hit
+    Stand   = KrisJordan::Blackjack::Action::Stand
+    Bust    = KrisJordan::Blackjack::Action::Bust
+    Split   = KrisJordan::Blackjack::Action::Split
 
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
@@ -21,7 +22,7 @@ module KrisJordan::Blackjack::State
           options << Hit.new(deck.random_card) if hand.can_hit?
 
           if player.chips >= hand.chips
-            options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split?
+            options << Split.new(deck.random_card, deck.random_card) if hand.can_split?
             options << DoubleDownAction.new(deck.random_card) if hand.can_double_down?
           end
 
@@ -73,34 +74,6 @@ module KrisJordan::Blackjack::State
 
     def to_json
       [@card]
-    end
-  end
-
-  class SplitAction
-    KEY = 't'
-
-    def initialize first_card, second_card
-      @first_card  = first_card
-      @second_card = second_card
-      freeze
-    end
-
-    def prompt
-      " Spli[t]"
-    end
-
-    def describe round
-      "#{round.player.name} split."
-    end
-
-    def transition round
-      round.change_deck(round.deck.take(@first_card).take(@second_card))
-           .change_player(round.player.put_in(round.hand.chips))
-           .split_hand(round.hand.split([@first_card,@second_card]))
-    end
-
-    def to_json
-      [@first_card, @second_card]
     end
   end
 
