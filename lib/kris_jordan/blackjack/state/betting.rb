@@ -1,8 +1,8 @@
 module KrisJordan::Blackjack::State
 
   class Betting
-    Skip = KrisJordan::Blackjack::Action::Skip
-    Bet  = KrisJordan::Blackjack::Action::Bet
+    Skip = KrisJordan::Blackjack::Event::Skip
+    Bet  = KrisJordan::Blackjack::Event::Bet
 
     def self.prompt deck, player, hand, dealer_hand
       if hand != dealer_hand

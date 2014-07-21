@@ -1,9 +1,9 @@
 module KrisJordan::Blackjack::State
 
   class Paying
-    Skip = KrisJordan::Blackjack::Action::Skip
-    Win = KrisJordan::Blackjack::Action::Win
-    Lose = KrisJordan::Blackjack::Action::Lose
+    Skip = KrisJordan::Blackjack::Event::Skip
+    Win = KrisJordan::Blackjack::Event::Win
+    Lose = KrisJordan::Blackjack::Event::Lose
 
     def self.prompt deck, player, hand, dealer_hand
       if player.dealer?

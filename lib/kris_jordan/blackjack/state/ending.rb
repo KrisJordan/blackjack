@@ -1,7 +1,7 @@
 module KrisJordan::Blackjack::State
 
   class Ending
-    End = KrisJordan::Blackjack::Action::End
+    End = KrisJordan::Blackjack::Event::End
 
     def self.prompt deck, player, hand, dealer
       End.new

@@ -1,4 +1,4 @@
-module KrisJordan::Blackjack::Action
+module KrisJordan::Blackjack::Event
 
   class Bet < Base
     def initialize amount

@@ -1,4 +1,4 @@
-module KrisJordan::Blackjack::Action
+module KrisJordan::Blackjack::Event
 
   class Base
     KEY = nil

@@ -1,11 +1,11 @@
 module KrisJordan::Blackjack::State
 
   class Playing
-    Hit         = KrisJordan::Blackjack::Action::Hit
-    Stand       = KrisJordan::Blackjack::Action::Stand
-    Bust        = KrisJordan::Blackjack::Action::Bust
-    Split       = KrisJordan::Blackjack::Action::Split
-    DoubleDown  = KrisJordan::Blackjack::Action::DoubleDown
+    Hit         = KrisJordan::Blackjack::Event::Hit
+    Stand       = KrisJordan::Blackjack::Event::Stand
+    Bust        = KrisJordan::Blackjack::Event::Bust
+    Split       = KrisJordan::Blackjack::Event::Split
+    DoubleDown  = KrisJordan::Blackjack::Event::DoubleDown
 
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
@@ -27,8 +27,8 @@ module KrisJordan::Blackjack::State
             options << DoubleDown.new(deck.random_card) if hand.can_double_down?
           end
 
-          action = nil
-          until action != nil
+          event = nil
+          until event != nil
             puts ""
             puts "#{player.name} you have"
             puts hand.cards.map{|c|c.pretty_print}.join " "
@@ -39,9 +39,9 @@ module KrisJordan::Blackjack::State
             rescue Interrupt, NameError
               exit
             end
-            action = options.find { |o| o.class::KEY == input.downcase }
+            event = options.find { |o| o.class::KEY == input.downcase }
           end
-          action
+          event
         end
       end
     end

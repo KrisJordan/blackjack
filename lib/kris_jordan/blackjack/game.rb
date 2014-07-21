@@ -15,10 +15,10 @@ module KrisJordan::Blackjack
 
     def play(resume=false)
       GameJournal.begin(self) unless resume
-      while action = @round.next_action and @players.count > 1
-        GameJournal.write action
-        narrate action.describe @round
-        take action
+      while event = @round.next_event and @players.count > 1
+        GameJournal.write event
+        narrate event.describe @round
+        dispatch event
       end
       GameJournal.clear
       puts "\nGame over, thanks for playing!\n\n"
@@ -28,9 +28,9 @@ module KrisJordan::Blackjack
       puts "\n#{description}" if description
     end
 
-    def take action
-      unless action.is_a? Action::End
-        @round   = action.transition @round
+    def dispatch event
+      unless event.is_a? Event::End
+        @round   = event.transition @round
       else
         @players = @round.players.select { |p| p.dealer? or p.chips > 0 }
         @round   = Round.new @deck, @players
