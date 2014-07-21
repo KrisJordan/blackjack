@@ -1,10 +1,11 @@
 module KrisJordan::Blackjack::State
 
   class Playing
-    Hit     = KrisJordan::Blackjack::Action::Hit
-    Stand   = KrisJordan::Blackjack::Action::Stand
-    Bust    = KrisJordan::Blackjack::Action::Bust
-    Split   = KrisJordan::Blackjack::Action::Split
+    Hit         = KrisJordan::Blackjack::Action::Hit
+    Stand       = KrisJordan::Blackjack::Action::Stand
+    Bust        = KrisJordan::Blackjack::Action::Bust
+    Split       = KrisJordan::Blackjack::Action::Split
+    DoubleDown  = KrisJordan::Blackjack::Action::DoubleDown
 
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
@@ -23,7 +24,7 @@ module KrisJordan::Blackjack::State
 
           if player.chips >= hand.chips
             options << Split.new(deck.random_card, deck.random_card) if hand.can_split?
-            options << DoubleDownAction.new(deck.random_card) if hand.can_double_down?
+            options << DoubleDown.new(deck.random_card) if hand.can_double_down?
           end
 
           action = nil
@@ -43,37 +44,6 @@ module KrisJordan::Blackjack::State
           action
         end
       end
-    end
-  end
-
-  class DoubleDownAction
-    KEY = 'd'
-
-    def initialize card
-      @card = card
-      freeze
-    end
-
-    def prompt
-      " [D]ouble down"
-    end
-
-    def describe round
-      "#{round.player.name} doubled down #{round.hand.pretty_print} #{@card.pretty_print}."
-    end
-
-    def transition round
-      round.change_deck(round.deck.take(@card))
-           .change_player(round.player.put_in(round.hand.chips))
-           .change_hand(
-              round.hand
-                   .bet(round.hand.chips)
-                   .dealt(@card))
-           .next_turn
-    end
-
-    def to_json
-      [@card]
     end
   end
 
