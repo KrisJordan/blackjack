@@ -1,4 +1,5 @@
 module KrisJordan::Blackjack
+  # An immutable representation of a round of blackjack at one point in time.
   class Round
 
     attr_reader :deck, :players, :hands, :turn
@@ -29,11 +30,12 @@ module KrisJordan::Blackjack
       freeze
     end
 
-    # Mutations are copy-on-write as rounds are immutable
+    # Delegate control to the round's State for the next Event.
     def prompt
       STATES[@turn.state].prompt @deck, player, hand, dealer_hand
     end
 
+    # Mutations are copy-on-write
     def next_turn
       Round.new @deck, @players, @hands, @turn.next(self)
     end

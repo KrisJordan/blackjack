@@ -13,6 +13,9 @@ module KrisJordan::Blackjack
       @round = Round.new @deck, @players
     end
 
+    # Interactive event loop prompts the player for input.
+    # Inputs generate events.
+    # Events are written to the write-ahead log, printed, and handled.
     def play(resume=false)
       GameJournal.begin(self) unless resume
       while @players.count > 1 and event = @round.prompt
@@ -24,6 +27,9 @@ module KrisJordan::Blackjack
       puts "\nGame over, thanks for playing!\n\n"
     end
 
+    # Given an `Event` the game's `@round` is transformed to its next
+    # state by the event. After a round completes, players without chips
+    # are removed from `@players` and a new round begins.
     def handle event
       unless event.is_a? Event::End
         @round   = event.transform @round
