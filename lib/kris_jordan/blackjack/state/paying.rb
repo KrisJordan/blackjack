@@ -10,7 +10,7 @@ module KrisJordan::Blackjack::State
         Skip.new
       else
         if hand.bust?
-          Lose.new hand.chips
+          Lose.new
 
         elsif hand.blackjack?
           if dealer_hand.blackjack?
@@ -28,7 +28,7 @@ module KrisJordan::Blackjack::State
             elsif hand == dealer_hand
               Win.new "push", hand.chips
             else
-              Lose.new hand.chips
+              Lose.new
             end
           end
         end
