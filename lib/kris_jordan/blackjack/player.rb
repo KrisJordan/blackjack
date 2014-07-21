@@ -20,5 +20,6 @@ module KrisJordan::Blackjack
     def dealer?
       false
     end
+
   end
 end

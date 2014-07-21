@@ -3,11 +3,11 @@
 ## Features
 
 - Multiple players
-- Quitting and resuming play by replaying an append-only write-ahead log
 - Splitting
 - Doubling down
 - Variable # of decks
 - Variable # of starting chips
+- Quitting and resuming play by replaying an append-only write-ahead log
 
 ## Playing
 
@@ -66,6 +66,13 @@ largely as an exercise to try them in a Ruby codebase:
  is a simple, JSON serialization, whose first serializes the top-level
  of a `Game` and subsequent lines are `Event` objects transforming the game's
  state.
+
+## Codewalk, Top-down
+
+* bin/blackjack.rb - command-line parser/runner
+* game.rb - where mutable state of current players and round is kept, event loop runs here
+* Primatives
+** 
 
 ## License
 
