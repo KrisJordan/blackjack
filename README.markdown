@@ -67,8 +67,8 @@ largely as an exercise to try them in a Ruby codebase:
  architecture is that events can be logged to an append-only file and easily
  replayed to return a game to any state. The write-ahead log for this game
  is stored in your current working directory under `.blackjack.aof`. Its format
- is a simple, JSON serialization, whose first serializes the top-level
- of a `Game` and subsequent lines are `Event` objects transforming the game's
+ is a simple, JSON serialization, that first serializes the `Game`s initial
+ state followed by a stream of `Event` objects transforming the game's
  state.
 
 ## Codewalk, Top-down
