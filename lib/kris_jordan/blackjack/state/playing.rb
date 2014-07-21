@@ -1,7 +1,8 @@
 module KrisJordan::Blackjack::State
-  Hand = KrisJordan::Blackjack::Hand
 
   class Playing
+    Hit = KrisJordan::Blackjack::Action::Hit
+
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
         BustAction.new
@@ -10,14 +11,14 @@ module KrisJordan::Blackjack::State
           if hand.value >= 17
             StandAction.new
           elsif hand.value > 0
-            HitAction.new deck.random_card
+            Hit.new deck.random_card
           else
             BustAction.new
           end
         else
           options = []
           options << StandAction.new
-          options << HitAction.new(deck.random_card) if hand.can_hit?
+          options << Hit.new(deck.random_card) if hand.can_hit?
 
           if player.chips >= hand.chips
             options << SplitAction.new(deck.random_card, deck.random_card) if hand.can_split?
@@ -41,32 +42,6 @@ module KrisJordan::Blackjack::State
           action
         end
       end
-    end
-  end
-
-  class HitAction
-    KEY = 'h'
-
-    def initialize card
-      @card = card
-      freeze
-    end
-
-    def prompt 
-      " [H]it"
-    end
-
-    def describe round
-      "#{round.player.name} hits #{round.hand.pretty_print} #{@card.pretty_print}."
-    end
-
-    def transition round
-      round.change_deck(round.deck.take(@card))
-           .change_hand(round.hand.dealt(@card))
-    end
-
-    def to_json
-      { classname: self.class.name, args: [@card.to_json] }
     end
   end
 
