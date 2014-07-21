@@ -5,7 +5,7 @@ module KrisJordan::Blackjack::State
     Bet  = KrisJordan::Blackjack::Event::Bet
 
     def self.prompt deck, player, hand, dealer_hand
-      if hand != dealer_hand
+      unless player.dealer?
         chips = 0
         until chips > 0 and chips <= player.chips
           puts ""
