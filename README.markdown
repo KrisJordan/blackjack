@@ -16,14 +16,16 @@
 - Ruby 1.9+
 - Bundler
 
-### Install
+### Install & Play
 
-1. `git clone`
+1. `git clone git@github.com:KrisJordan/blackjack.git`
+1. `cd blackjack`
 1. `bundle install`
+1. `./blackjack`
 
-### Play
+### Run rspec tests
 
-`./blackjack`
+`bundle exec rspec`
 
 ### Command-line Options
 
@@ -72,34 +74,35 @@ largely as an exercise to try them in a Ruby codebase:
 ## Codewalk, Top-down
 
 * Primatives
-** card.rb - the atom
-** hand.rb - contains both cards in hand and chips riding on hand
-** deck.rb - a stack of cards
-** player.rb - a named holder of chips
-** dealer.rb - a cold body
+ * card.rb - the atom
+ * hand.rb - contains both cards in hand and chips riding on hand
+ * deck.rb - a stack of cards
+ * player.rb - a named holder of chips
+ * dealer.rb - a cold body
 * High-level flow
-** bin/blackjack.rb - command-line parser/runner
-** game.rb - where mutable state of current players and round is kept, event loop runs here
-** round.rb - immutable representation of a round at a point in time. Setters are copy-on-write.
-** turn_iterator.rb - simple cursor for traversing the states, players, and hands of a round
+ * bin/blackjack.rb - command-line parser/runner
+ * game.rb - where mutable state of current players and round is kept, event loop runs here
+ * round.rb - immutable representation of a round at a point in time. Setters are copy-on-write.
+ * turn_iterator.rb - simple cursor for traversing the states, players, and hands of a round
+ * game_journal - the write-ahead logger/replayer
 * Round States in `state/`
-** betting.rb - players buy into the round
-** dealing.rb - players receive a random card one at a time, run twice
-** playing.rb - players move through each of their hand(s) until busting or passing
-** paying.rb - players beating or pushing with the dealer are distributed chips
-** ending.rb - round is over
+ * betting.rb - players buy into the round
+ * dealing.rb - players receive a random card one at a time, run twice
+ * playing.rb - players move through each of their hand(s) until busting or passing
+ * paying.rb - players beating or pushing with the dealer are distributed chips
+ * ending.rb - round is over
 * Events in `event/`
-** base.rb - event base class with descriptions of methods
-** bet.rb - player placed a bet
-** skip.rb - noop skip turn (i.e. dealer's turn to bet)
-** stand.rb - player ends turn
-** hit.rb - be dealt another card, do not advance turn
-** bust.rb - emitted when hand value exceeds 21
-** double_down.rb - double bet on hand and receive 3rd, final card
-** split.rb - split hand and put in more chips on second hand. Dealt a new card per hand.
-** win.rb - reason and # of chips won by player event
-** lose.rb - noop for printing narration
-** end.rb - round is over
+ * base.rb - event base class with descriptions of methods
+ * bet.rb - player placed a bet
+ * skip.rb - noop skip turn (i.e. dealer's turn to bet)
+ * stand.rb - player ends turn
+ * hit.rb - be dealt another card, do not advance turn
+ * bust.rb - emitted when hand value exceeds 21
+ * double_down.rb - double bet on hand and receive 3rd, final card
+ * split.rb - split hand and put in more chips on second hand. Dealt a new card per hand.
+ * win.rb - reason and # of chips won by player event
+ * lose.rb - noop for printing narration
+ * end.rb - round is over
 
 ## License
 
