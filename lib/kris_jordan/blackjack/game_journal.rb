@@ -11,7 +11,7 @@ module KrisJordan::Blackjack
       File.open(JOURNAL_FILE, "r") do |file|
         index = 0
         file.each_line do |line|
-          object = unmarshall(JSON[line])
+          object = unmarshal(JSON[line])
           if index == 0
             game = object
           else
@@ -28,19 +28,30 @@ module KrisJordan::Blackjack
       write game
     end
     
-    def self.write action
+    def self.write object
       open('.blackjack.aof','a') do |f| 
-        json = action.to_json
-        json[:timestamp] = Time.now
-        f.puts JSON.generate json
+        f.puts JSON.generate marshal object
       end
     end
 
-    def self.unmarshall(obj)
+    def self.marshal object
+      case object.class.name
+      when "String", "Symbol", "Fixnum", "Array"
+        object
+      else
+        {
+          classname: object.class.name,
+          args:      object.to_json.map { |o| marshal o },
+          timestamp: Time.now
+        }
+      end
+    end
+
+    def self.unmarshal(obj)
       classname = obj["classname"]
       args      = obj["args"].map do |arg| 
         if arg.is_a? Hash
-          self.unmarshall(arg)
+          self.unmarshal(arg)
         else
           arg
         end

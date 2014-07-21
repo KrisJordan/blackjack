@@ -4,6 +4,7 @@ require 'kris_jordan/blackjack/action/skip'
 require 'kris_jordan/blackjack/action/deal'
 require 'kris_jordan/blackjack/action/hit'
 require 'kris_jordan/blackjack/action/stand'
+require 'kris_jordan/blackjack/action/bust'
 
 module KrisJordan::Blackjack
   module Action

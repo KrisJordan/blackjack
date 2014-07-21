@@ -3,18 +3,17 @@ module KrisJordan::Blackjack::State
   class Playing
     Hit   = KrisJordan::Blackjack::Action::Hit
     Stand = KrisJordan::Blackjack::Action::Stand
+    Bust  = KrisJordan::Blackjack::Action::Bust
 
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
-        BustAction.new
+        Bust.new
       else
         if player.dealer?
           if hand.value >= 17
             Stand.new
-          elsif hand.value > 0
-            Hit.new deck.random_card
           else
-            BustAction.new
+            Hit.new deck.random_card
           end
         else
           options = []
@@ -73,7 +72,7 @@ module KrisJordan::Blackjack::State
     end
 
     def to_json
-      { classname: self.class.name, args: [@card.to_json] }
+      [@card]
     end
   end
 
@@ -101,22 +100,7 @@ module KrisJordan::Blackjack::State
     end
 
     def to_json
-      { classname: self.class.name, args: [@first_card.to_json,@second_card.to_json] }
-    end
-  end
-
-
-  class BustAction
-    def describe round
-      "#{round.player.name} busts."
-    end
-
-    def transition round
-      round.next_turn
-    end
-
-    def to_json
-      { classname: self.class.name, args: [] }
+      [@first_card, @second_card]
     end
   end
 

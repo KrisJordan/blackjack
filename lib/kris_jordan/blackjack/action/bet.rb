@@ -17,7 +17,7 @@ module KrisJordan::Blackjack::Action
     end
 
     def to_json
-      { classname: self.class.name, args: [@amount] }
+      [@amount]
     end
   end
 

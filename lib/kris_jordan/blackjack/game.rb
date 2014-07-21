@@ -38,11 +38,7 @@ module KrisJordan::Blackjack
     end
 
     def to_json
-      { classname: self.class.name, args: [
-          @starting_players,
-          @starting_chips,
-          @decks_per_round
-      ] }
+      [ @starting_players, @starting_chips, @decks_per_round ]
     end
 
     private

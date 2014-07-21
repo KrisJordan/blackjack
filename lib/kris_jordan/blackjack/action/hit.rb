@@ -22,7 +22,7 @@ module KrisJordan::Blackjack::Action
     end
 
     def to_json
-      { classname: self.class.name, args: [@card.to_json] }
+      [@card]
     end
   end
 

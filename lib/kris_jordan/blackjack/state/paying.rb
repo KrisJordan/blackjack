@@ -50,7 +50,7 @@ module KrisJordan::Blackjack::State
     end
 
     def to_json
-      { classname: self.class.name, args: [@win,@chips] }
+      [@win,@chips]
     end
   end
 
@@ -68,7 +68,7 @@ module KrisJordan::Blackjack::State
     end
 
     def to_json
-      { classname: self.class.name, args: [@chips] }
+      [@chips]
     end
   end
 

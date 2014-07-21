@@ -11,9 +11,5 @@ module KrisJordan::Blackjack::Action
       "#{round.player.name} stands with #{round.hand.pretty_print}."
     end
 
-    def transition round
-      round.next_turn
-    end
-
   end
 end

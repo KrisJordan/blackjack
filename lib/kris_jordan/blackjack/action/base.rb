@@ -4,7 +4,7 @@ module KrisJordan::Blackjack::Action
     KEY = nil
 
     def transition round
-      round
+      round.next_turn
     end
 
     def prompt 
@@ -14,7 +14,7 @@ module KrisJordan::Blackjack::Action
     end
 
     def to_json
-      { classname: self.class.name, args: [] }
+      []
     end
   end
 
