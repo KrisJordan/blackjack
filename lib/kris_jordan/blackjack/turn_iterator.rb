@@ -1,5 +1,9 @@
 module KrisJordan::Blackjack
 
+  # TurnIterator is a simple cursor that maintains the
+  # focus of what state the round is in and whose turn
+  # it is. Each state traverses each player, each player's hands,
+  # and ends with the dealer.
   class TurnIterator
     attr_reader :state, :player, :hand
 

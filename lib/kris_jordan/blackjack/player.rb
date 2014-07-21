@@ -17,18 +17,6 @@ module KrisJordan::Blackjack
       Player.new @name, @chips + chips
     end
 
-    def play hand
-      puts hand
-      puts "Hit (h) or Stand (s)?"
-      move = gets.chomp
-      case move
-      when "h"
-        :hit
-      when "s"
-        :stand
-      end
-    end
-
     def dealer?
       false
     end

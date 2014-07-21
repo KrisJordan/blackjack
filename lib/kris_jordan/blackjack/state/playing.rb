@@ -21,11 +21,8 @@ module KrisJordan::Blackjack::State
           options = []
           options << Stand.new
           options << Hit.new(deck.random_card) if hand.can_hit?
-
-          if player.chips >= hand.chips
-            options << Split.new(deck.random_card, deck.random_card) if hand.can_split?
-            options << DoubleDown.new(deck.random_card) if hand.can_double_down?
-          end
+          options << Split.new(deck.random_card, deck.random_card) if hand.can_split? player
+          options << DoubleDown.new(deck.random_card) if hand.can_double_down? player
 
           event = nil
           until event != nil

@@ -67,8 +67,8 @@ if resume
   game = GameJournal.resumed_game
 else
   game = Game.new(
-    Choice[:players], 
     Choice[:chips],
+    Choice[:players], 
     Choice[:decks]
   )
 end

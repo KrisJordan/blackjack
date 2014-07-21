@@ -6,7 +6,7 @@ module KrisJordan::Blackjack
 
     attr_accessor :players, :deck, :round
 
-    def initialize starting_players, starting_chips, decks_per_round
+    def initialize starting_chips, starting_players, decks_per_round
       initialize_chips starting_chips
       initialize_players starting_players
       initialize_deck decks_per_round
@@ -15,7 +15,7 @@ module KrisJordan::Blackjack
 
     def play(resume=false)
       GameJournal.begin(self) unless resume
-      while event = @round.next_event and @players.count > 1
+      while @players.count > 1 and event = @round.prompt
         GameJournal.write event
         narrate event.describe @round
         handle event
@@ -34,7 +34,7 @@ module KrisJordan::Blackjack
     end
 
     def to_json
-      [ @starting_players, @starting_chips, @decks_per_round ]
+      [ @starting_chips, @starting_players, @decks_per_round ]
     end
 
     private
