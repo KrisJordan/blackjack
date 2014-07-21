@@ -30,6 +30,14 @@ module KrisJordan::Blackjack
     end
 
     # Mutations are copy-on-write as rounds are immutable
+    def prompt
+      STATES[@turn.state].prompt @deck, player, hand, dealer_hand
+    end
+
+    def next_turn
+      Round.new @deck, @players, @hands, @turn.next(self)
+    end
+    
     def change_deck deck
       Round.new deck, @players, @hands, @turn
     end
@@ -67,13 +75,6 @@ module KrisJordan::Blackjack
       @hands[@turn.player][@turn.hand]
     end
 
-    def next_event
-      STATES[@turn.state].prompt @deck, player, hand, dealer_hand
-    end
 
-    def next_turn
-      Round.new @deck, @players, @hands, @turn.next(self)
-    end
-    
   end
 end
