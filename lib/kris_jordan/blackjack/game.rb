@@ -29,7 +29,7 @@ module KrisJordan::Blackjack
     end
 
     def take action
-      unless action.is_a? State::EndAction
+      unless action.is_a? Action::End
         @round   = action.transition @round
       else
         @players = @round.players.select { |p| p.dealer? or p.chips > 0 }

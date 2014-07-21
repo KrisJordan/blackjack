@@ -9,6 +9,7 @@ require 'kris_jordan/blackjack/action/split'
 require 'kris_jordan/blackjack/action/double_down'
 require 'kris_jordan/blackjack/action/win'
 require 'kris_jordan/blackjack/action/lose'
+require 'kris_jordan/blackjack/action/end'
 
 module KrisJordan::Blackjack
   module Action
