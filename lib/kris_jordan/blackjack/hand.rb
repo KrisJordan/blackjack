@@ -15,6 +15,8 @@ module KrisJordan::Blackjack
       @cards.length
     end
 
+    # Copy-on-write mutators
+
     def bet(chips)
       Hand.new @cards, @chips + chips, @chips > 0
     end
@@ -30,12 +32,9 @@ module KrisJordan::Blackjack
       end
     end
 
-    def possible_values
-      permute_recur(@cards.map(&:value))
-        .uniq
-        .select { |value| value <= 21 }
-    end
+    # Accessors
 
+    # Return the highest possible value
     def value
       values = possible_values
       unless values.empty?
@@ -45,8 +44,21 @@ module KrisJordan::Blackjack
       end
     end
 
+    # Return all possible values
+    def possible_values
+      permute_recur(@cards.map(&:value))
+        .uniq
+        .select { |value| value <= 21 }
+    end
+
+    # Implement for Comparable functionality
     def <=>(deck)
       value <=> deck.value
+    end
+
+    # Convenience functions
+    def bust?
+      length > 0 and value == 0
     end
 
     def blackjack?
@@ -57,16 +69,17 @@ module KrisJordan::Blackjack
       length >= 2 and value < 21 and not @doubled_down
     end
 
-    def can_split?
-      length == 2 and @cards[0].value == @cards[1].value
+    def can_split? player
+      player.chips >= chips and
+      length == 2 and 
+      @cards[0].value == @cards[1].value
     end
 
-    def can_double_down?
-      length == 2 and not @doubled_down and not blackjack?
-    end
-
-    def bust?
-      length > 0 and value == 0
+    def can_double_down? player
+      player.chips >= chips and
+      length == 2 and 
+      not @doubled_down and 
+      not blackjack?
     end
 
     def to_s
@@ -83,6 +96,12 @@ module KrisJordan::Blackjack
 
     private
 
+    # Permute all possible values of a hand by recursively
+    # travelling to the end of the list of cards, then pushing
+    # permutations as we pop back up the stack. Could be done
+    # imperatively, but since blackjack hands tend to max out
+    # at 5 or 6 cards and only aces generate multiple permutations
+    # a simple, recursive permutation is acceptable.
     def permute_recur(list)
       values, *rest = list
       if rest.empty?

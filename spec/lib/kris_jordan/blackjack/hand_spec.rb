@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-Hand = KrisJordan::Blackjack::Hand
-Card = KrisJordan::Blackjack::Card
+Hand   = KrisJordan::Blackjack::Hand
+Card   = KrisJordan::Blackjack::Card
+Player = KrisJordan::Blackjack::Player
 
 describe Hand do
 
@@ -47,6 +48,36 @@ describe Hand do
 
     it "should instantiate with cards" do
       expect( @a_pair_of_2s.length ).to eq 2
+    end
+  end
+
+  describe "#dealt" do
+    before :each do
+      @start_hand  = @an_empty_hand
+      @new_hand    = @start_hand.dealt Card.new :jack, :heart
+    end
+
+    it "should return a new instance" do
+      expect(@new_hand.object_id).to_not eq @start_hand.object_id
+    end
+
+    it "should add a card to the new instance" do
+      expect(@new_hand.length).to eq 1
+    end
+  end
+
+  describe "#bet" do
+    before :each do
+      @start_hand  = @an_empty_hand
+      @new_hand    = @start_hand.bet 1
+    end
+
+    it "should return a new instance" do
+      expect(@new_hand.object_id).to_not eq @start_hand.object_id
+    end
+
+    it "should add a chip to the new instance" do
+      expect(@new_hand.chips).to eq 1
     end
   end
 
@@ -165,43 +196,37 @@ describe Hand do
   end
 
   describe "#can_split?" do
+    before :each do
+      @rich_player = Player.new :foo, 10
+      @poor_player = Player.new :foo, 0
+    end
+
     it "should be false with two cards of matching value" do
-      expect(@a_2_and_a_3.can_split?).to eq false
+      expect(@a_2_and_a_3.can_split? @rich_player).to eq false
     end
 
     it "should be false with more than two matching cards" do
-      expect(@triple_aces.can_split?).to eq false
+      expect(@triple_aces.can_split? @rich_player).to eq false
     end
 
     it "should be true with two cards of matching value" do
-      expect(@a_pair_of_2s.can_split?).to eq true
+      expect(@a_pair_of_2s.can_split? @rich_player).to eq true
     end
 
     it "should be true with two face cards that match" do
-      expect(@a_king_and_a_queen.can_split?).to eq true
+      expect(@a_king_and_a_queen.can_split? @rich_player).to eq true
     end
 
     it "should be true with two aces" do
-      expect(@a_pair_of_aces.can_split?).to eq true
+      expect(@a_pair_of_aces.can_split? @rich_player).to eq true
     end
 
     it "should be true with a face card and a 10" do
-      expect(@a_king_and_a_10.can_split?).to eq true
-    end
-  end
-
-  describe "#dealt" do
-    before :each do
-      @start_hand  = @an_empty_hand
-      @new_hand    = @start_hand.dealt Card.new :jack, :heart
+      expect(@a_king_and_a_10.can_split? @rich_player).to eq true
     end
 
-    it "should return a new instance" do
-      expect(@new_hand.object_id).to_not eq @start_hand.object_id
-    end
-
-    it "should add a card to the new instance" do
-      expect(@new_hand.length).to eq 1
+    it "should be false for a player without chips" do
+      expect(@a_pair_of_2s.bet(1).can_split? @poor_player).to eq false
     end
   end
 
