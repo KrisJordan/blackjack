@@ -1,4 +1,14 @@
 module KrisJordan::Blackjack
+
+  # GameJournal is a naive singleton that handles writing
+  # game events to an append-only, write-ahead log file and 
+  # recreating a game by replying events from the file.
+  #
+  # The first line of the log contains the `Game` object serialized.
+  # Subsequent lines are serialized `Event` objects that transform
+  # the state of the game.
+  #
+  # TODO: Implement compaction at end of rounds.
   class GameJournal
     JOURNAL_FILE = '.blackjack.aof'
 
@@ -6,6 +16,7 @@ module KrisJordan::Blackjack
       File.exist? JOURNAL_FILE
     end
 
+    # Create a game with the first line, 
     def self.resumed_game
       game = nil
       File.open(JOURNAL_FILE, "r") do |file|
@@ -13,9 +24,12 @@ module KrisJordan::Blackjack
         file.each_line do |line|
           object = unmarshal(JSON[line])
           if index == 0
+            # The first line contains the game settings
             game = object
           else
-            game.handle object
+            # Subsequent lines are Events
+            event = object # TODO: remove
+            game.handle event
           end
           index += 1
         end
