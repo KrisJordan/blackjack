@@ -1,7 +1,8 @@
 module KrisJordan::Blackjack::State
 
   class Playing
-    Hit = KrisJordan::Blackjack::Action::Hit
+    Hit   = KrisJordan::Blackjack::Action::Hit
+    Stand = KrisJordan::Blackjack::Action::Stand
 
     def self.prompt deck, player, hand, dealer_hand
       if hand.value == 0
@@ -9,7 +10,7 @@ module KrisJordan::Blackjack::State
       else
         if player.dealer?
           if hand.value >= 17
-            StandAction.new
+            Stand.new
           elsif hand.value > 0
             Hit.new deck.random_card
           else
@@ -17,7 +18,7 @@ module KrisJordan::Blackjack::State
           end
         else
           options = []
-          options << StandAction.new
+          options << Stand.new
           options << Hit.new(deck.random_card) if hand.can_hit?
 
           if player.chips >= hand.chips
@@ -104,25 +105,6 @@ module KrisJordan::Blackjack::State
     end
   end
 
-  class StandAction
-    KEY = 's'
-
-    def prompt
-      " [S]tand"
-    end
-
-    def describe round
-      "#{round.player.name} stands with #{round.hand.pretty_print}."
-    end
-
-    def transition round
-      round.next_turn
-    end
-
-    def to_json
-      { classname: self.class.name, args: [] }
-    end
-  end
 
   class BustAction
     def describe round
